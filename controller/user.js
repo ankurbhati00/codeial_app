@@ -36,6 +36,7 @@ console.log(`this is ${user==null}`);
         }else{
             return res.redirect('/user/sign-up');
         }
+        
     };
     
 
