@@ -9,6 +9,10 @@ return res.render('home', {
 
 //user sign in
 module.exports.signIn = function (req, res){
+if(req.isAuthenticated()){
+    return res.redirect('/user');
+}
+
 return res.render('sign_in',{
     title:"Sign In"
 })
@@ -16,6 +20,9 @@ return res.render('sign_in',{
 
 //user sign up
 module.exports.signUp = function (req, res){
+    if(req.isAuthenticated()){
+        return res.redirect('/user');
+    }
 return res.render('sign_up',{
     title:"Sign Up"
 })
@@ -23,22 +30,32 @@ return res.render('sign_up',{
 
 
 //create sign up using user credentials;
-module.exports.userSignUp = function (req, res){
-  const user = User.findOne({email:req.body.email})
-console.log(`this is ${user==null}`);
+module.exports.userSignUp = async function (req, res){
+  const user =await User.findOne({email:req.body.email})
+                       .catch(err=>console.log(err));
         if(!user){
-            User.create(req.body, function(err, user){
-           if(err){console.log("err in create user !!"); return};
-        console.log("user created successfully");
+           await User.create(req.body)
+           .catch(err=>console.log(err));
+           console.log("user created successfuly");
            return res.redirect('/user/sign-in');
         
-            });
-        }else{
+            }else{
             return res.redirect('/user/sign-up');
         }
         
     };
     
+//destroy session and sign out
+module.exports.destroySession= function (req, res){
+req.logout((err)=>{
+    if(err){
+        return next(err);
+    }
+});
+return res.redirect('/user/sign-in');
+
+}
+
 
 
     

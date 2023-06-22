@@ -9,9 +9,9 @@ passport.use(new LocalStrategy({
 usernameField:'email'
 },
 
-function(email, phone, done){
+async function(email, password, done){
 
-const user = User.findOne({email:email});
+const user = await User.findOne({email:email}).catch(err=>console.log(err));
 
     if(!user || user.password!=password){
         console.log('invalid username / password');
@@ -29,16 +29,43 @@ done(null, user.id);
 });
 
 //deserializing the user to decide which key is to be in the cookie.
-passport.deserializeUser(function(id, done){
-User.findById(id, function(err, user){
-if(err){
-    console.log("err in finding id --> passport");
-    return done(err);
-}
-
-return done(null, user);
+passport.deserializeUser(async function(id, done){
+await User.findById(id)
+.then((user)=>{
+    return done(null, user);
 })
+.catch((err)=>{
+        console.log("err in finding id --> passport");
+        return done(err);
+});
+
+
 
 });
+
+// check the user is authenticated or not
+passport.checkAuthentication = function (req, res , next){
+//if the user is signed in, then pass on the request to the next function(controller's action);
+if(req.isAuthenticated()){
+    return next();
+}
+//if the user is not signed in
+
+return res.redirect('/user/sign-in');
+
+
+}
+
+passport.setAuthenticatedUser = function (req, res, next){
+if(req.isAuthenticated()){
+    //req.user contains the current signed in user from the session cookie and we are just sending this to the
+    // locals for the views
+    res.locals.user = req.user;
+}
+next();
+}
+
+
+
 
 module.exports = passport;

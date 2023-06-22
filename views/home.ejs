@@ -6,6 +6,30 @@
     <title><%= title %></title>
 </head>
 <body>
-    <h1>Codeial /<%= title %></h1>
+<h1>
+    <ul>
+
+    
+<%if(locals.user){%>
+
+    <li><%=user.name%></li>
+<li>
+    <a href="/user/sign-out">sign Out</a>
+</li>
+
+    <%}else{%>
+
+        <li>
+            <a href="/user/sign-in"></a>
+        </li>
+        <li>
+            <a href="/user/sign-up"></a>
+        </li>
+
+
+        <%}%>
+    </ul>
+</h1>
+    <h2>Codeial /<%= title %></h2>
 </body>
 </html>
