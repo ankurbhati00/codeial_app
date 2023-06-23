@@ -41,6 +41,22 @@
     </form>
 </section>
 
+<div id="posts-list">
+    <ul>
+        
+        <% for(let post of posts){ %>
+            <p>
+           <li>
+             <%= post.content %> 
+             <br>
+             <%= post.user.name %>
+          </li>
+           </p>
+            <% } %>
+
+    </ul>
+</div>
+
 
 
 

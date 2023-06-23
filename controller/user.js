@@ -1,10 +1,27 @@
 const User = require('../models/user');
-
+const Post = require('../models/post');
 //user home 
-module.exports.user = function (req , res){
-return res.render('home', {
-    title:" home"
-});
+module.exports.user =async function (req , res){
+// await Post.find({user:req.user._id})
+// .then(function(posts){
+//     return res.render('home', {
+//         title:" home",
+//         posts:posts
+//     });
+// })
+// .catch(err=>console.log(err));
+
+await Post.find({}).populate('user')
+.then(function(posts){
+    console.log(posts);
+    return res.render('home', {
+        title:" home",
+        posts:posts
+    });
+})
+.catch(err=>console.log(err));
+
+
 };
 
 //user sign in
