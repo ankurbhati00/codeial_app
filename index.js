@@ -41,7 +41,7 @@ app.use(passport.setAuthenticatedUser);
 
 
 app.use('/user', require('./router/user'));
-
+app.use('/post', require('./router/post'));
 
 app.listen(port, (err)=>{
     if(err){
